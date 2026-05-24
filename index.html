@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- TÍTULO DE LA PESTAÑA (Optimizado para SEO) -->
-    <title>Flota Bolivar | Transporte, Encomiendas y Pago Seguro</title>
+    <title>Bolivar</title>
     
     <!-- ÍCONO DE LA PESTAÑA (Favicon) -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -22,7 +22,7 @@
     <meta name="author" content="Flota Bolivar">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="revisit-after" content="1 days">
-    <link rel="canonical" href="https://flotabolivar.pagoseguro.cloud/">
+    <link rel="canonical" href="flotabolivar.pagoseguro.cloud/">
     
     <!-- Geo-etiquetas para posicionamiento local -->
     <meta name="geo.region" content="BO" />
@@ -220,6 +220,7 @@
                     const idxRecepcion = headers.indexOf('RECEPCION');
                     const idxEmbarque = headers.indexOf('ENBARQUE');
                     const idxDesembarque = headers.indexOf('DESENBARQUE');
+                    const idxComentario = headers.indexOf('COMENTARIO'); // Nueva columna
 
                     if (idxCodigo === -1) {
                         throw new Error("No se encontró la columna 'CODIGO' en Google Sheets.");
@@ -239,11 +240,12 @@
                         setPackageData({
                             recepcion: foundRow[idxRecepcion] ? foundRow[idxRecepcion].trim() : 'Pendiente',
                             embarque: foundRow[idxEmbarque] ? foundRow[idxEmbarque].trim() : 'Pendiente',
-                            desembarque: foundRow[idxDesembarque] ? foundRow[idxDesembarque].trim() : 'Pendiente'
+                            desembarque: foundRow[idxDesembarque] ? foundRow[idxDesembarque].trim() : 'Pendiente',
+                            comentario: idxComentario !== -1 && foundRow[idxComentario] ? foundRow[idxComentario].trim() : 'Gracias por confiar en TRANSPORTES BOLIVAR.'
                         });
                         setShowResults(true);
                     } else {
-                        setErrorMsg('Código no encontrado en el sistema. Por favor, verifique e intente de nuevo.');
+                        setErrorMsg('NO. DE GUÍA INEXISTENTE O\nVERIFIQUE EL NÚMERO DE GUÍA E INTENTE NUEVAMENTE O\nSI EL NÚMERO DE GUÍA ES CORRECTO, SU CARGA YA FUE ENTREGADA');
                     }
                 } catch (error) {
                     console.error("Error consultando Google Sheets:", error);
@@ -350,7 +352,7 @@
 
                                 {/* Mensaje de Error */}
                                 {errorMsg && (
-                                    <div className="text-red-500 text-sm font-medium bg-red-50 px-4 py-2 rounded-lg border border-red-100 fade-in">
+                                    <div className="text-red-500 text-sm font-medium bg-red-50 px-4 py-3 rounded-lg border border-red-100 fade-in whitespace-pre-line text-center">
                                         {errorMsg}
                                     </div>
                                 )}
@@ -379,10 +381,10 @@
                         {showResults && (
                             <div className="w-full max-w-3xl fade-in space-y-6">
                                 
-                                {/* Mensaje Principal */}
-                                <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl shadow-sm">
-                                    <p className="text-blue-900 text-lg md:text-xl font-medium leading-relaxed">
-                                        "Su paquete está en registro, se estima que llegará a su destino a las 7:00 am de mañana, puede recogerlo a partir de las 9:00 am. Gracias por confiar en <span className="font-bold">TRANSPORTES BOLIVAR</span>"
+                                {/* Mensaje Principal (Comentario desde Google Sheets) */}
+                                <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl shadow-sm flex items-center justify-center">
+                                    <p className="text-blue-900 text-lg md:text-xl font-medium leading-relaxed text-center">
+                                        {packageData.comentario}
                                     </p>
                                 </div>
 
